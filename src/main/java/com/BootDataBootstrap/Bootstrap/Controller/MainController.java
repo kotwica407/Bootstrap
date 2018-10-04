@@ -5,6 +5,7 @@ import com.BootDataBootstrap.Bootstrap.model.Task;
 import com.BootDataBootstrap.Bootstrap.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,8 @@ public class MainController {
     private TaskService taskService;
 
     @GetMapping("/")
-    public String home(HttpServletRequest request){
+    public String home(Model model, HttpServletRequest request){
+        model.addAttribute("task", new Task());
         request.setAttribute("tasks",taskService.findAll());
         request.setAttribute("mode","MODE_HOME");
         return "index";

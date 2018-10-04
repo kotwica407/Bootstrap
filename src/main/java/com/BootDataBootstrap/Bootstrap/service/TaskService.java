@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -18,6 +19,10 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
+    public Optional<Task> findTask(int id){
+        Optional<Task> task = taskRepository.findById(id);
+        return task;
+    }
     public List<Task> findAll(){
         List<Task> tasks = new ArrayList<>();
         for(Task task : taskRepository.findAll()){

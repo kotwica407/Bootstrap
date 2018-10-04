@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +8,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Ekran główny</title>
+    <link href="static/css/style.css" ref="stylesheet">
 
 </head>
 <body>
@@ -21,11 +23,72 @@
         </ul>
     </div>
 </nav>
-<div class="container">
+
+<div class="container invisible-at-first" id="homeDiv">
     <div class="jumbotron text-center">
         <h3>Welcome to Task Manager</h3>
         <p>You can add, delete and modify tasks</p>
     </div>
 </div>
+<div class="container text-center invisible-at-first" id="taskDiv">
+    <div class="jumbotron text-center">
+        <h3>My tasks</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-left">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Date Created</th>
+                    <th>Finished</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.id}">ID</td>
+                    <td th:text="${task.name}">Name</td>
+                    <td th:text="${task.description}">Description</td>
+                    <td th:text="${task.dateCreated}">Date Created</td>
+                    <td th:text="${task.finished}">Finished</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="container text-center">
+    <h3>Manage Task</h3>
+    <form class="form-horizontal" th:object="${task}" method="post" th:action="@{/save-task}">
+        <input type="hidden" name="id" th:field="*{id}"/>
+        <div class="form-group">
+            <label class="control-label col-md-3">Name</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" th:field="*{name}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Description</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" th:field="*{description}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Date Created</label>
+            <div class="col-md-5">
+                <input type="text" class="form-control" th:field="*{dateCreated}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Finished</label>
+            <div class="col-md-5">
+                <input type="radio" class="col-sm-1" th:field="true"/>
+                <div class="col-sm-3">Yes</div>
+                <input type="radio" class="col-sm-1" th:field="false"/>
+                <div class="col-sm-3">No</div>
+            </div>
+        </div>
+    </form>
+</div>>
 </body>
 </html>

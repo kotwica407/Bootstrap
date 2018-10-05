@@ -6,6 +6,7 @@ import com.BootDataBootstrap.Bootstrap.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,7 @@ public class MainController {
     private TaskService taskService;
 
     @GetMapping("/")
-    public String home(Model model, HttpServletRequest request){
-        model.addAttribute("task", new Task());
+    public String home(HttpServletRequest request){
         request.setAttribute("tasks",taskService.findAll());
         request.setAttribute("mode","MODE_HOME");
         return "index";
@@ -38,14 +38,16 @@ public class MainController {
     }
 
     @GetMapping("/new-task")
-    public String newTask(HttpServletRequest request){
+    public String newTask(Model model, HttpServletRequest request){
+        model.addAttribute("task", new Task());
         request.setAttribute("tasks",taskService.findAll());
         request.setAttribute("mode","MODE_NEW");
         return "index";
     }
 
     @PostMapping("/save-task")
-    public String saveTask(@ModelAttribute Task task, HttpServletRequest request){
+    public String saveTask(@ModelAttribute Task task, BindingResult bindingResult, HttpServletRequest request){
+        task.setDateCreated(new Date());
         taskService.save(task);
         request.setAttribute("tasks",taskService.findAll());
         request.setAttribute("mode","MODE_TASKS");
@@ -53,8 +55,9 @@ public class MainController {
     }
 
     @GetMapping("/update-task")
-    public String updateTask(@RequestParam int id, HttpServletRequest request){
-        request.setAttribute("tasks",taskService.findTask(id));
+    public String updateTask(@RequestParam int id, Model model, HttpServletRequest request){
+        model.addAttribute("task", taskService.findTask(id));
+        //request.setAttribute("tasks",taskService.findTask(id));
         request.setAttribute("mode","MODE_UPDATE");
         return "index";
     }
@@ -65,12 +68,5 @@ public class MainController {
         return "index";
     }
 
-    @GetMapping("/save-task")
-    @ResponseBody
-    public String saveTask(@RequestParam String name, @RequestParam String desc){
-        Task task = new Task(name, desc, new Date(), false);
-        taskService.save(task);
-        return "Task saved!!!";
-    }
 
 }

@@ -15,80 +15,124 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">Main Window</a>
+            <a class="navbar-brand" href="/">Main Window</a>
         </div>
         <ul class="nav navbar-nav">
-            <li><a href="#">Manage tasks</a></li>
-            <li><a href="#">All tasks</a></li>
+            <li><a href="/new-task">New task</a></li>
+            <li><a href="/all-tasks">All tasks</a></li>
         </ul>
     </div>
 </nav>
+<div th:switch="${mode}">
+    <div th:case="MODE_HOME">
+        <div class="container" id="homeDiv">
+            <div class="jumbotron text-center">
+                <h3>Welcome to Task Manager</h3>
+                <p>You can add, delete and modify tasks</p>
+            </div>
+        </div>
+    </div>
+    <div th:case="MODE_TASKS">
+        <div class="container text-center" id="taskDiv">
+            <div class="jumbotron text-center">
+                <h3>My tasks</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped text-left">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Date Created</th>
+                            <th>Finished</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="task : ${tasks}">
+                            <td th:text="${task.id}">ID</td>
+                            <td th:text="${task.name}">Name</td>
+                            <td th:text="${task.description}">Description</td>
+                            <td th:text="${task.dateCreated}">Date Created</td>
+                            <td th:text="${task.finished}">Finished</td>
+                            <td><a th:href="@{'/update-task'(id=${task.id})}"><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td><a th:href="@{'/delete-task'(id=${task.id})}"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:case="MODE_NEW">
+        <div class="container text-center">
+            <h3>Manage Task</h3>
+            <form class="form-horizontal" th:object="${task}" method="post" th:action="@{/save-task}">
+                <input type="hidden" name="id" th:field="*{id}"/>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Name</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" th:field="*{name}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Description</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" th:field="*{description}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Finished</label>
+                    <div class="col-md-5">
+                        <input type="radio" class="col-sm-1" th:value="true"/>
+                        <div class="col-sm-3">Yes</div>
+                        <input type="radio" class="col-sm-1" th:value="false"/>
+                        <div class="col-sm-3">No</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:case="MODE_UPDATE">
+        <div class="container text-center">
+            <h3>Manage Task</h3>
+            <form class="form-horizontal" th:object="${task}" method="post" th:action="@{/save-task}">
+                <input type="hidden" name="id" th:field="*{id}"/>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Name</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" th:field="*{name}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Description</label>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control" th:field="*{description}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3">Finished</label>
+                    <div class="col-md-5">
+                        <input type="radio" class="col-sm-1" th:value="true"/>
+                        <div class="col-sm-3">Yes</div>
+                        <input type="radio" class="col-sm-1" th:value="false"/>
+                        <div class="col-sm-3">No</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div th:case="*"></div>
+</div>
 
-<div class="container invisible-at-first" id="homeDiv">
-    <div class="jumbotron text-center">
-        <h3>Welcome to Task Manager</h3>
-        <p>You can add, delete and modify tasks</p>
-    </div>
-</div>
-<div class="container text-center invisible-at-first" id="taskDiv">
-    <div class="jumbotron text-center">
-        <h3>My tasks</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped text-left">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Date Created</th>
-                    <th>Finished</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="task : ${tasks}">
-                    <td th:text="${task.id}">ID</td>
-                    <td th:text="${task.name}">Name</td>
-                    <td th:text="${task.description}">Description</td>
-                    <td th:text="${task.dateCreated}">Date Created</td>
-                    <td th:text="${task.finished}">Finished</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="container text-center">
-    <h3>Manage Task</h3>
-    <form class="form-horizontal" th:object="${task}" method="post" th:action="@{/save-task}">
-        <input type="hidden" name="id" th:field="*{id}"/>
-        <div class="form-group">
-            <label class="control-label col-md-3">Name</label>
-            <div class="col-md-5">
-                <input type="text" class="form-control" th:field="*{name}"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-3">Description</label>
-            <div class="col-md-5">
-                <input type="text" class="form-control" th:field="*{description}"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-3">Date Created</label>
-            <div class="col-md-5">
-                <input type="text" class="form-control" th:field="*{dateCreated}"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-3">Finished</label>
-            <div class="col-md-5">
-                <input type="radio" class="col-sm-1" th:value="true"/>
-                <div class="col-sm-3">Yes</div>
-                <input type="radio" class="col-sm-1" th:value="false"/>
-                <div class="col-sm-3">No</div>
-            </div>
-        </div>
-    </form>
-</div>>
+
+
 </body>
 </html>

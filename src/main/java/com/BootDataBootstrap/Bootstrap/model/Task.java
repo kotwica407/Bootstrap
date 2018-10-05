@@ -10,7 +10,9 @@ public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    @Column(length = 85)
     private String name;
+    @Column
     private String description;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;

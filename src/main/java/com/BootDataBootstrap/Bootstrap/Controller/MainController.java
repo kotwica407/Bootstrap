@@ -4,6 +4,7 @@ package com.BootDataBootstrap.Bootstrap.Controller;
 import com.BootDataBootstrap.Bootstrap.model.Task;
 import com.BootDataBootstrap.Bootstrap.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,6 +67,19 @@ public class MainController {
     public String deleteTask(@RequestParam int id, HttpServletRequest request){
         taskService.delete(id);
         return "index";
+    }
+
+
+    @ResponseBody
+    @GetMapping("/secure/admin")
+    public String securedHelloAdmin(){
+        return "Hello admin";
+    }
+
+    @ResponseBody
+    @GetMapping("/secure/user")
+    public String securedHelloUser(){
+        return "Hello user";
     }
 
 

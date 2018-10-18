@@ -69,17 +69,9 @@ public class MainController {
         return "index";
     }
 
-
-    @ResponseBody
-    @GetMapping("/secure/admin")
-    public String securedHelloAdmin(){
-        return "Hello admin";
-    }
-
-    @ResponseBody
-    @GetMapping("/secure/user")
-    public String securedHelloUser(){
-        return "Hello user";
+    @GetMapping("/login")
+    public String login(){
+        return "custom-login";
     }
 
 

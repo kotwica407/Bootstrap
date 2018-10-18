@@ -29,13 +29,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/secure/admin").hasRole("ADMIN")
-                .antMatchers("/secure/user").hasRole("USER")
-                .anyRequest().permitAll()
+                .antMatchers("/*task*").hasAnyRole("ADMIN","USER")
                 .and()
-                .formLogin().permitAll();
+                .formLogin()
+                    .loginPage("/login")
+                    .loginProcessingUrl("/app-login")
+                    .usernameParameter("app_username")
+                    .passwordParameter("app_password")
+                    .defaultSuccessUrl("/all-tasks")
+                .and().logout()
+                    .logoutUrl("/app-logout")
+                    .logoutSuccessUrl("/login")
+                    .and().exceptionHandling()
+                        .accessDeniedPage("/error");
     }
 
     private PasswordEncoder getPasswordEncoder() {
@@ -47,7 +54,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             @Override
             public boolean matches(CharSequence charSequence, String s) {
-                return true;
+                if(encode(charSequence).equals(s))
+                    return true;
+                else
+                    return false;
             }
         };
     }

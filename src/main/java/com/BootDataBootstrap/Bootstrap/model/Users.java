@@ -1,9 +1,8 @@
 package com.BootDataBootstrap.Bootstrap.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 @Entity
@@ -17,6 +16,8 @@ public class Users {
         this.lastname = users.getLastname();
         this.userId = users.getUserId();
         this.password = users.getPassword();
+        this.enabled = users.isEnabled();
+        this.confirmationToken=users.getConfirmationToken();
     }
 
     public Users(){
@@ -24,13 +25,15 @@ public class Users {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_ID")
     private int userId;
-    @Basic
-    @Column(name = "email")
+    @Column(name = "email", nullable = false, unique = true)
+    @Email(message = "Please provide a valid e-mail")
+    @NotEmpty(message = "Please provide an e-mail")
     private String email;
     @Basic
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password")
     private String password;
     @Basic
     @Column(name = "name")
@@ -45,6 +48,27 @@ public class Users {
     @Column(name = "active")
     private Integer active;
 
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @Column(name = "confirmation_token")
+    private String confirmationToken;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public String getConfirmationToken() {
+        return confirmationToken;
+    }
+
+    public void setConfirmationToken(String confirmationToken) {
+        this.confirmationToken = confirmationToken;
+    }
 
     public int getUserId() {
         return userId;
@@ -112,11 +136,13 @@ public class Users {
                 Objects.equals(name, users.name) &&
                 Objects.equals(lastname, users.lastname) &&
                 Objects.equals(role, users.role) &&
-                Objects.equals(active, users.active);
+                Objects.equals(active, users.active) &&
+                Objects.equals(enabled, users.enabled) &&
+                Objects.equals(confirmationToken, users.confirmationToken);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, email, password, name, lastname, role, active);
+        return Objects.hash(userId, email, password, name, lastname, role, active, enabled, confirmationToken);
     }
 }

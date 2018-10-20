@@ -17,6 +17,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private UsersRepository usersRepository;
 
+
+    public Optional<Users> findByEmail(String email){
+        return usersRepository.findByEmail(email);
+    }
+
+    public Optional<Users> findByConfirmationToken(String confirmationToken){
+        return usersRepository.findByConfirmationToken(confirmationToken);
+    }
+
+    public void saveUser(Users user) {
+        usersRepository.save(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Users> optionalUsers = usersRepository.findByEmail(email);
@@ -27,4 +40,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .map(CustomUserDetails::new).get();
 
     }
+
+
 }

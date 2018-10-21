@@ -5,7 +5,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "users")
 public class Users {
 
     public Users(Users users){
@@ -51,7 +51,7 @@ public class Users {
     @Column(name = "enabled")
     private boolean enabled;
 
-    @Column(name = "confirmation_token")
+    @Column(name = "confirmationToken")
     private String confirmationToken;
 
     public boolean isEnabled() {

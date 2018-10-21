@@ -45,10 +45,11 @@ public class RegisterController {
 
     @PostMapping("/register")
     public ModelAndView processRegistrationForm(ModelAndView modelAndView, @Valid Users users, BindingResult bindingResult, HttpServletRequest request){
+        modelAndView.addObject("user", users);
         Optional<Users> usersExists = customUserDetailsService.findByEmail(users.getEmail());
 
         if(usersExists.isPresent()){
-            modelAndView.addObject("alreadyRegisteredMessage", "Oops!  There is already a user registered with the email provided.");
+            modelAndView.addObject("errorMessage", "Oops!  There is already a user registered with the email provided.");
             modelAndView.setViewName("register");
             bindingResult.reject("email");
         }
@@ -69,7 +70,7 @@ public class RegisterController {
             registrationEmail.setTo(users.getEmail());
             registrationEmail.setSubject("Registration Confirmation");
             registrationEmail.setText("To confirm your e-mail address, please click the link below:\n"
-                    + appUrl + "/confirm?token=" + users.getConfirmationToken());
+                    + "http://localhost:8080/confirm?token=" + users.getConfirmationToken());
             registrationEmail.setFrom("noreply@domain.com");
 
             emailService.sendEmail(registrationEmail);
